@@ -43,11 +43,13 @@ public void updateData(List<GroupGoodsBean.DataBean> list){
     @Override
     public void onBindViewHolder(GroupViewHolder holder, int position) {
         holder.textView.setText(list.get(position).getName());
+        //网格recyclerview的数据展示
         holder.recyclerView.setLayoutManager(new GridLayoutManager(context, 3));
         MyAdapter adapter = new MyAdapter(context);
         //为图一嵌套的recyclerview设置适配器
         holder.recyclerView.setAdapter(adapter);
         adapter.addData(list.get(position).getList());
+
     }
 
 

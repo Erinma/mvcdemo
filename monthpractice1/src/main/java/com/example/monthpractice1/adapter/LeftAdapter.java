@@ -38,6 +38,7 @@ public class LeftAdapter extends RecyclerView.Adapter<LeftAdapter.LeftViewHolder
 
     @Override
     public void onBindViewHolder(LeftViewHolder holder, final int position) {
+        //条目点击效果
         if(po==position){
             holder.textView.setTextColor(Color.RED);
             holder.textView.setBackgroundColor(Color.parseColor("#eeeeee"));

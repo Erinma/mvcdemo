@@ -3,6 +3,7 @@ package com.example.monthpractice1.utils;
 import android.os.Environment;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -10,10 +11,10 @@ import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.internal.cache.CacheInterceptor;
-import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.Response;
 
 /**
  * Created by mamiaomiao on 2018/2/27.
@@ -35,19 +36,31 @@ public class OkhttpUtil {
         }
         return util;
     }
-    private static OkHttpClient okHttpClient;
-    private static  OkHttpClient getOkHttpClient(){
 
-        if(okHttpClient==null){
+    private static OkHttpClient okHttpClient;
+
+    private static OkHttpClient getOkHttpClient() {
+
+        if (okHttpClient == null) {
             File sdcache = new File(Environment.getExternalStorageDirectory(), "cache");
             int cacheSize = 10 * 1024 * 1024;
-            okHttpClient=new OkHttpClient.Builder()
+            okHttpClient = new OkHttpClient.Builder()
+//                    .addInterceptor(new Interceptor() {
+//                        @Override
+//                        public Response intercept(Chain chain) throws IOException {
+//                            Request request = chain.request();
+//                            Request builder = request.newBuilder().header("source", "android").build();
+//                            Response response = chain.proceed(builder);
+//                            return response;
+//                        }
+//                    })
                     .connectTimeout(15, TimeUnit.SECONDS)
-                    .cache(new Cache(sdcache,cacheSize))
+                    //.cache(new Cache(sdcache, cacheSize))
                     .build();
         }
         return okHttpClient;
     }
+
     /**
      * get请求
      * 参数1 url
@@ -67,6 +80,7 @@ public class OkhttpUtil {
 
 
     }
+
     /**
      * post请求
      * 参数1 url

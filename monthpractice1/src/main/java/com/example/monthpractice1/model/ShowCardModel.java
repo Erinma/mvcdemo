@@ -14,15 +14,16 @@ import okhttp3.Response;
 
 /**
  * Created by mamiaomiao on 2018/2/27.
+ * model负责  数据   处理；
  */
 
 public class ShowCardModel implements IShowCardModel {
+    //请求商品分类接口
     @Override
     public void getGoodsCard(String url,GsonObjectCallback callback) {
-        OkhttpUtil.doGet(url,
-           callback);
+        OkhttpUtil.doGet(url, callback);
     }
-
+//请求商品 子 分类的网络接口
     @Override
     public void getRightData(String url, GsonObjectCallback<GroupGoodsBean> callback) {
         OkhttpUtil.doGet(url,callback);
