@@ -45,15 +45,15 @@ public class OkhttpUtil {
             File sdcache = new File(Environment.getExternalStorageDirectory(), "cache");
             int cacheSize = 10 * 1024 * 1024;
             okHttpClient = new OkHttpClient.Builder()
-//                    .addInterceptor(new Interceptor() {
-//                        @Override
-//                        public Response intercept(Chain chain) throws IOException {
-//                            Request request = chain.request();
-//                            Request builder = request.newBuilder().header("source", "android").build();
-//                            Response response = chain.proceed(builder);
-//                            return response;
-//                        }
-//                    })
+                    .addInterceptor(new Interceptor() {
+                        @Override
+                        public Response intercept(Chain chain) throws IOException {
+                            Request request = chain.request();
+                            Request builder = request.newBuilder().addHeader("source", "android").build();
+                            Response response = chain.proceed(builder);
+                            return response;
+                        }
+                    })
                     .connectTimeout(15, TimeUnit.SECONDS)
                     //.cache(new Cache(sdcache, cacheSize))
                     .build();

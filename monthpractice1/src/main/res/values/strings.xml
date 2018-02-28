@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">monthPractice1</string>
+    <string name="goods_price">优惠价：¥%1$s</string>
+
 </resources>
