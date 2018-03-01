@@ -1,6 +1,7 @@
 package com.example.monthpractice1.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.monthpractice1.R;
 import com.example.monthpractice1.bean.GoodsBean;
+import com.example.monthpractice1.view.ThirdListActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,6 +65,13 @@ public class GoodsAdapter extends RecyclerView.Adapter<GoodsAdapter.GoodsViewHol
             url=urls[0];
         }
         Glide.with(context).load(url).into(holder.img);
+        holder.img.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                context.startActivity(new Intent(context, ThirdListActivity.class));
+            }
+        });
+
     }
 
     @Override

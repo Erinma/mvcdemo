@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Cache;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -39,27 +38,22 @@ public class OkhttpUtil {
 
     private static OkHttpClient okHttpClient;
 
-    private static OkHttpClient getOkHttpClient() {
 
+    private static OkHttpClient getOkHttpClient() {
+        MyGetInterceptor interceptor = new MyGetInterceptor.Builder().addQueryParam("source", "android").build();
         if (okHttpClient == null) {
             File sdcache = new File(Environment.getExternalStorageDirectory(), "cache");
             int cacheSize = 10 * 1024 * 1024;
             okHttpClient = new OkHttpClient.Builder()
-                    .addInterceptor(new Interceptor() {
-                        @Override
-                        public Response intercept(Chain chain) throws IOException {
-                            Request request = chain.request();
-                            Request builder = request.newBuilder().addHeader("source", "android").build();
-                            Response response = chain.proceed(builder);
-                            return response;
-                        }
-                    })
+                    .addInterceptor(interceptor)
                     .connectTimeout(15, TimeUnit.SECONDS)
                     //.cache(new Cache(sdcache, cacheSize))
                     .build();
         }
         return okHttpClient;
     }
+
+
 
     /**
      * get请求
