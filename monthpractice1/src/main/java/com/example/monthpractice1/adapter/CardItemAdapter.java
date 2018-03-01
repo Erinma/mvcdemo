@@ -29,9 +29,14 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
     //存储勾选标志
     private List<Integer> tags = new ArrayList<>();
 
-    public CardItemAdapter(Context context, List<CardBean.DataBean.ListBean> list) {
+    public CardItemAdapter(Context context, List<CardBean.DataBean.ListBean> list,boolean ischek) {
         this.context = context;
         this.list = list;
+        if(ischek){
+            for (int i = 0; i < list.size(); i++) {
+                tags.add(i);
+            }
+        }
 
     }
 
@@ -42,11 +47,13 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
     }
 
     public void setAllGoodsCheck(boolean ischeck) {
-        tags.clear();
         if (ischeck) {
+            tags.clear();
             for (int i = 0; i < list.size(); i++) {
                 tags.add(i);
             }
+        }else if(tags.size()==list.size()){
+            tags.clear();
         }
         notifyDataSetChanged();
     }
@@ -74,7 +81,7 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
                 }
                 if (tags.size() == list.size()) {//代表当前商家选中所有商品
                     listner.setCheck(true);
-                } else if(tags.size() ==0){//代表商家没有商品被选中
+                } else{//代表商家没有商品被选中
                     listner.setCheck(false);
                 }
 

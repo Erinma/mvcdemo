@@ -23,12 +23,29 @@ import java.util.List;
 public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder> {
     private List<CardBean.DataBean> dataBeans = new ArrayList<>();
     private Context context;
+    //存储勾选标志
+    private List<Integer> tags = new ArrayList<>();
 
     public CardAdapter(List<CardBean.DataBean> dataBeans, Context context) {
         this.dataBeans = dataBeans;
         this.context = context;
     }
+    private CardItemAdapter.OnCheckListner listner;
 
+    public void setSellerCheck(CardItemAdapter.OnCheckListner listner) {
+        this.listner = listner;
+    }
+    public void setAllGoodsCheck(boolean ischeck) {
+        if (ischeck) {
+            tags.clear();
+            for (int i = 0; i < dataBeans.size(); i++) {
+                tags.add(i);
+            }
+        }else if(tags.size()==dataBeans.size()){
+            tags.clear();
+        }
+        notifyDataSetChanged();
+    }
     @Override
     public CardViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_card_layout, parent, false);
@@ -38,11 +55,12 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
 
     @Override
     public void onBindViewHolder(final CardViewHolder holder, final int position) {
-        //holder.checkBox.setChecked(true);
-
+        holder.checkBox.setChecked(tags.contains(position));
         holder.title.setText(dataBeans.get(position).getSellerName());
-        final CardItemAdapter adapter = new CardItemAdapter(context, dataBeans.get(position).getList());
+        if(holder.recyclerView.getAdapter()==null){
+        final CardItemAdapter adapter = new CardItemAdapter(context, dataBeans.get(position).getList(),tags.contains(position));
         holder.recyclerView.setAdapter(adapter);
+        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
         adapter.setSellerCheck(new CardItemAdapter.OnCheckListner() {
             @Override
             public void setCheck(boolean isCheck) {
@@ -54,9 +72,21 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 adapter.setAllGoodsCheck(isChecked);
+                if (isChecked) {//选中，将position放入
+                    if (!tags.contains(position)) {
+                        tags.add(position);
+                    }
+                } else if (tags.contains(position)) {
+                    tags.remove((Integer) position);
+                }
+                if (tags.size() == dataBeans.size()) {//代表当前商家选中所有商品
+                    listner.setCheck(true);
+                } else {//代表商家没有商品被选中
+                    listner.setCheck(false);
+                }
             }
-        });
-        holder.recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        });}
+
     }
 
     @Override
