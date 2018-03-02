@@ -29,10 +29,10 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
     //存储勾选标志
     private List<Integer> tags = new ArrayList<>();
 
-    public CardItemAdapter(Context context, List<CardBean.DataBean.ListBean> list,boolean ischek) {
+    public CardItemAdapter(Context context, List<CardBean.DataBean.ListBean> list, boolean ischek) {
         this.context = context;
         this.list = list;
-        if(ischek){
+        if (ischek) {
             for (int i = 0; i < list.size(); i++) {
                 tags.add(i);
             }
@@ -52,7 +52,7 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
             for (int i = 0; i < list.size(); i++) {
                 tags.add(i);
             }
-        }else if(tags.size()==list.size()){
+        } else if (tags.size() == list.size()) {
             tags.clear();
         }
         notifyDataSetChanged();
@@ -66,12 +66,14 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
     }
 
     @Override
-    public void onBindViewHolder(CardItemViewHolder holder, final int position) {
+    public void onBindViewHolder(final CardItemViewHolder holder, final int position) {
         //初始化checkbox状态
         holder.checkBox.setChecked(tags.contains(position));
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
+
                 if (isChecked) {//选中，将position放入
                     if (!tags.contains(position)) {
                         tags.add(position);
@@ -79,12 +81,20 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
                 } else if (tags.contains(position)) {
                     tags.remove((Integer) position);
                 }
+                double price = 0;
+                for (int i = 0; i < tags.size(); i++) {
+                    //勾选单选框，影响的价格
+                    CardBean.DataBean.ListBean listBean=list.get(tags.get(i));
+                    double total = listBean.getNum() * listBean.getBargainPrice();
+                    price += total;
+                }
+                listner.getTotal(price);
                 if (tags.size() == list.size()) {//代表当前商家选中所有商品
                     listner.setCheck(true);
-                } else{//代表商家没有商品被选中
+                } else {//代表商家没有商品被选中
                     listner.setCheck(false);
                 }
-
+                //等价于 listner.setCheck(tags.size()==list.size());
             }
         });
         String url = list.get(position).getImages();
@@ -95,6 +105,20 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
         Glide.with(context).load(url).into(holder.img);
         holder.title.setText(list.get(position).getTitle());
         holder.price.setText("优惠价：¥" + list.get(position).getBargainPrice());
+        holder.num.setLinster(new OnChangeListner() {
+            @Override
+            public void getSum(int item) {
+                list.get(position).setNum(item);
+                double price = 0;
+                for (int i = 0; i < tags.size(); i++) {
+                    //勾选单选框，影响的价格
+                    CardBean.DataBean.ListBean listBean=list.get(tags.get(i));
+                    double total = listBean.getNum() * listBean.getBargainPrice();
+                    price += total;
+                }
+                listner.getTotal(price);
+            }
+        });
         holder.num.initData(list.get(position).getNum());
     }
 
@@ -121,5 +145,12 @@ public class CardItemAdapter extends RecyclerView.Adapter<CardItemAdapter.CardIt
 
     public interface OnCheckListner {
         void setCheck(boolean isCheck);
+
+        void getTotal(double item);
+    }
+
+    public interface OnChangeListner {
+
+        void getSum(int item);
     }
 }

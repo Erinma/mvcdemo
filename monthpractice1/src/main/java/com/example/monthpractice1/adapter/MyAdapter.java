@@ -63,7 +63,7 @@ public class MyAdapter extends RecyclerView.Adapter<TextViewHolder> {
         holder.img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OkhttpUtil.doGet("https://www.zhaoapi.cn/product/addCart?uid=12218&pid=2", new Callback() {
+                OkhttpUtil.getInstance().doGet("https://www.zhaoapi.cn/product/addCart?uid=12218&pid=2", new Callback() {
                     @Override
                     public void onFailure(Call call, IOException e) {
 

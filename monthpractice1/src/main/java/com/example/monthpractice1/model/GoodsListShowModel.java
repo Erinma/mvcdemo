@@ -12,7 +12,7 @@ import com.example.monthpractice1.utils.OkhttpUtil;
 public class GoodsListShowModel {
 
     public void getGoodsList(String url, GsonObjectCallback<GoodsBean> callback) {
-        OkhttpUtil.doGet(url, callback);
+        OkhttpUtil.getInstance().doGet(url, callback);
 
     }
 }

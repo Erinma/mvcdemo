@@ -12,6 +12,6 @@ import com.example.monthpractice1.utils.OkhttpUtil;
 public class CardModel {
 
     public void getCardList(String url, GsonObjectCallback<CardBean> callback) {
-        OkhttpUtil.doGet(url, callback);
+        OkhttpUtil.getInstance().doGet(url, callback);
     }
 }

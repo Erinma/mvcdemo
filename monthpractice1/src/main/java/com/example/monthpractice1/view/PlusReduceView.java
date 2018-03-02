@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.monthpractice1.R;
+import com.example.monthpractice1.adapter.CardItemAdapter;
 
 /**
  * Created by mamiaomiao on 2017/10/30.
@@ -19,7 +20,7 @@ import com.example.monthpractice1.R;
 public class PlusReduceView extends LinearLayout implements View.OnClickListener, TextWatcher {
     private TextView plus, reduce;
     private EditText sumEdit;
-    private int totalsum=1;
+    private int totalsum = 1;
 
     public PlusReduceView(Context context) {
         super(context);
@@ -46,10 +47,18 @@ public class PlusReduceView extends LinearLayout implements View.OnClickListener
         sumEdit.addTextChangedListener(this);
     }
 
+    private CardItemAdapter.OnChangeListner listner;
+
+    public void setLinster(CardItemAdapter.OnChangeListner linster) {
+        this.listner = linster;
+    }
+
     //初始化数据；
     public void initData(int num) {
         totalsum = num;
         sumEdit.setText(totalsum + "");
+        System.out.println(num);
+        this.listner.getSum(totalsum);
     }
 
     public int getSumData() {
@@ -100,14 +109,15 @@ public class PlusReduceView extends LinearLayout implements View.OnClickListener
 
     @Override
     public void afterTextChanged(Editable editable) {
-        if(editable.toString().equals("")){
+        if (editable.toString().equals("")) {
             initData(1);
             sumEdit.setSelection(1);
-        }else{
-        if (!editable.toString().equals(totalsum + "")) {
-            getSum();
-            initData(totalsum);
-            sumEdit.setSelection((totalsum+"").length());
-        }}
+        } else {
+            if (!editable.toString().equals(totalsum + "")) {
+                getSum();
+                initData(totalsum);
+                sumEdit.setSelection((totalsum + "").length());
+            }
+        }
     }
 }

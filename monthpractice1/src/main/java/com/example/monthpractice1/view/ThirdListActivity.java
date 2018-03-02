@@ -27,9 +27,11 @@ public class ThirdListActivity extends Activity implements ICardView {
     private RecyclerView recyclerView;
     private CardAdapter adapter;
     private CardPresenter presenter;
-private CheckBox checkBox;
-private TextView textView;
-private Button button;
+    private CheckBox checkBox;
+    private TextView textView;
+    private Button button;
+    private double price=0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,13 +55,20 @@ private Button button;
 
     @Override
     public void showCardList(List<CardBean.DataBean> dataBeans) {
-        adapter = new CardAdapter(dataBeans, ThirdListActivity.this);
-        recyclerView.setAdapter(adapter);
-        adapter.setSellerCheck(new CardItemAdapter.OnCheckListner() {
-            @Override
-            public void setCheck(boolean isCheck) {
-                checkBox.setChecked(isCheck);
-            }
-        });
+        if (dataBeans != null) {
+            adapter = new CardAdapter(dataBeans, ThirdListActivity.this);
+            recyclerView.setAdapter(adapter);
+            adapter.setSellerCheck(new CardItemAdapter.OnCheckListner() {
+                @Override
+                public void setCheck(boolean isCheck) {
+                    checkBox.setChecked(isCheck);
+                }
+
+                @Override
+                public void getTotal(double item) {
+                    textView.setText(item+"");
+                }
+            });
+        }
     }
 }

@@ -14,7 +14,9 @@ import com.example.monthpractice1.R;
 import com.example.monthpractice1.bean.CardBean;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by mamiaomiao on 2018/3/1.
@@ -25,6 +27,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     private Context context;
     //存储勾选标志
     private List<Integer> tags = new ArrayList<>();
+    private Map<Integer,Double> map=new HashMap<>();
 
     public CardAdapter(List<CardBean.DataBean> dataBeans, Context context) {
         this.dataBeans = dataBeans;
@@ -35,6 +38,7 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
     public void setSellerCheck(CardItemAdapter.OnCheckListner listner) {
         this.listner = listner;
     }
+    //设置activity界面操作全选，反选按钮作用适配器
     public void setAllGoodsCheck(boolean ischeck) {
         if (ischeck) {
             tags.clear();
@@ -66,12 +70,29 @@ public class CardAdapter extends RecyclerView.Adapter<CardAdapter.CardViewHolder
             public void setCheck(boolean isCheck) {
                 holder.checkBox.setChecked(isCheck);
             }
+
+            @Override
+            public void getTotal(double item) {
+               map.put(position,item);
+               double price=0;
+               for(int i=0;i<dataBeans.size();i++){
+                   if(map.get(i)!=null){
+                       price+=map.get(i);
+                   }
+               }
+               listner.getTotal(price);
+            }
         });
         //商家勾选作用于所有商品
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+               //影响内部recyclerview
                 adapter.setAllGoodsCheck(isChecked);
+
+
+
+                //影响外部activity的全选按钮
                 if (isChecked) {//选中，将position放入
                     if (!tags.contains(position)) {
                         tags.add(position);

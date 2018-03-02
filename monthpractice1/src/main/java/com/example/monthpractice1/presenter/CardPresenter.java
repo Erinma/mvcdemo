@@ -48,8 +48,9 @@ public class CardPresenter {
                             i--;
                         }
                     }
+                    reference.get().showCardList(list);
                 }
-                reference.get().showCardList(list);
+
             }
 
             @Override
